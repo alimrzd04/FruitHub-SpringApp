@@ -8,12 +8,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "products")
-@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Product {
+@Table(name = "products")
+public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,20 +30,23 @@ public class Product {
     @Column(nullable = false)
     private Integer stock_quantity;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Categories category;
 
-    @Column(name = "quantity_id")
-    private Integer quantityId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quantity_id")
+    private Quantities quantities;
 
-    @Column(name = "currency_id")
-    private Integer currencyId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currencies currency;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at",updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 

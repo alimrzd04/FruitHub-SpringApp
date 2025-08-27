@@ -1,15 +1,18 @@
 package org.example.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 public class ProductDto {
     private String name;
     private Double price;
-    private Integer stockQuantity;
-    private Integer categoryId;
-    private Integer quantityId;
-    private Integer currencyId;
-    private UUID statusId;
+    private int stockQuantity;
+
+    private UUID  statusId;
+    private UUID  categoryId;
+    private UUID  currencyId;
+    private UUID  quantityId;
 }

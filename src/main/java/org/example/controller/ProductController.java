@@ -1,36 +1,37 @@
 package org.example.controller;
 
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 import org.example.dto.ProductDto;
-import org.example.model.Product;
+import org.example.model.Products;
+import java.util.stream.Collectors;
+import org.example.dto.ProductMapper;
+import lombok.RequiredArgsConstructor;
 import org.example.service.ProductsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductsService productsService;
 
-    @GetMapping("/products")
-    public List<Product> findAllProducts(
-            @RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "asc") String sort,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int offset
-    ) {
-        return productsService.findAllProducts(search, sort, page, offset);
+
+    @GetMapping
+    public List<Object> getAllProducts() {
+        List<Products> products = productsService.findAllProducts(null, "asc", 0, 30);
+        return products.stream()
+                .map(product -> ProductMapper.toDTO(product))
+                .collect(Collectors.toList());
     }
 
-    @PostMapping("/products")
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
-        Product savedProduct = productsService.createProduct(productDto);
-        return ResponseEntity.ok(savedProduct);
+    @PostMapping("/create")
+    public ResponseEntity<Products> createProduct(@RequestBody ProductDto productDto) {
+        Products savedProducts = productsService.createProduct(productDto);
+        return ResponseEntity.ok(savedProducts);
 
     }
 }

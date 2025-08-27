@@ -1,20 +1,20 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-@Data
+@Entity
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "status")
 public class Status {
 
@@ -27,16 +27,13 @@ public class Status {
     private String name;
     private String description;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDateTime created_at;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updated_at;
 
-    @PrePersist
-    private void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.created_at = now;
-        this.updated_at = now;
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updated_at;
     }
-}
+

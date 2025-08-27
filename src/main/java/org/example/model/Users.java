@@ -1,15 +1,9 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 //import org.example.enums.Role;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,13 +12,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,37 +27,27 @@ public class User implements UserDetails {
     private UUID uuid;
 
     @Column(nullable = false, unique = true)
-//    @NotEmpty
     private String email;
 
     @Column(nullable = false)
-//    @NotBlank(message = "Şifrə boş ola bilməz")
-//    @Size(min = 6, message = "Şifrə ən azı 6 simvol olmalıdır")
     private String password;
 
-    //    @Enumerated(EnumType.STRING)
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false )
     private Status status;
-    @Column(name = "created_at")
+
+    @Column(name = "created_at",updatable = false)
+    @UpdateTimestamp
     private LocalDateTime created_at;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updated_at;
 
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)
 //    private Role role;
 
-    @PrePersist
-    private void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.created_at = now;
-        this.updated_at = now;
-//        if (this.role == null) {
-//            this.role = Role.USER;
-//        }
-    }
 
     @PreUpdate
     public void preUpdate() {

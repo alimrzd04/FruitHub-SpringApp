@@ -2,12 +2,12 @@ package org.example.controller;
 
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.example.dto.RegisterDto;
 import org.example.dto.LoginDto;
 import org.example.dto.TokenDto;
-import org.example.service.AuthenticationService;
+import org.example.dto.RegisterDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.example.service.AuthenticationService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

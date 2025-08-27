@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.example.model.Status;
 import org.example.repository.StatusRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+@Order(1)
 @Component
 @RequiredArgsConstructor
+
 public class StatusSeeder implements CommandLineRunner {
 
     private final StatusRepository statusRepository;

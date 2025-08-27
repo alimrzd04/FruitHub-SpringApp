@@ -5,7 +5,7 @@ import org.example.dto.LoginDto;
 import org.example.dto.RegisterDto;
 import org.example.dto.TokenDto;
 import org.example.model.Status;
-import org.example.model.User;
+import org.example.model.Users;
 import org.example.repository.StatusRepository;
 import org.example.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +26,7 @@ public class AuthenticationService {
     private final StatusRepository statusRepository;
 
     public RegisterDto register(RegisterDto registerDto) {
-        Optional<User> existingUser = userRepository.findByEmail(registerDto.getEmail());
+        Optional<Users> existingUser = userRepository.findByEmail(registerDto.getEmail());
         if (existingUser.isPresent()) {
             return RegisterDto.builder()
                     .message("Email already exists")
@@ -44,18 +44,18 @@ public class AuthenticationService {
         Status activeStatus = statusRepository.findByName("ACTIVE")
                 .orElseThrow(() -> new RuntimeException("Default status not found"));
 
-        User user = User.builder()
+        Users users = Users.builder()
                 .email(registerDto.getEmail())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
                 .status(activeStatus)
                 .build();
 
 
-        userRepository.save(user);
+        userRepository.save(users);
 
-        System.out.println("User registered: " + user.getEmail() +
-                ", Status: " + user.getStatus().getName() +
-                ", Enabled: " + user.isEnabled());
+        System.out.println("User registered: " + users.getEmail() +
+                ", Status: " + users.getStatus().getName() +
+                ", Enabled: " + users.isEnabled());
 
         return RegisterDto.builder()
                 .message("Register completed")
@@ -76,10 +76,10 @@ public class AuthenticationService {
                     )
             );
 
-            User user = userRepository.findByEmail(loginDto.getEmail_address())
+            Users users = userRepository.findByEmail(loginDto.getEmail_address())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            String token = jwtService.generateToken(user);
+            String token = jwtService.generateToken(users);
 
             return TokenDto.builder()
                     .token(token)
