@@ -1,6 +1,8 @@
 package org.example.repository;
 
 import org.example.model.Cart;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +19,8 @@ public interface CartRepository extends JpaRepository<Cart, UUID> {
 
     @Query("SELECT COALESCE(SUM(c.count), 0) FROM Cart c WHERE c.users.uuid = :userId")
     Integer getTotalProductCount(@Param("userId") UUID userId);
+
+    Page<Cart> findAllByUsers_Uuid(UUID userId, Pageable pageable);
 
 
 }

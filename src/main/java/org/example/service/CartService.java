@@ -2,6 +2,7 @@ package org.example.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.CartResponseDto;
 import org.example.model.Cart;
 import org.example.model.Products;
 import org.example.model.Status;
@@ -10,6 +11,9 @@ import org.example.repository.CartRepository;
 import org.example.repository.ProductRepository;
 import org.example.repository.StatusRepository;
 import org.example.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -60,5 +64,20 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
 
         return cartRepository.getTotalProductCount(user.getUuid());
+    }
+
+    public Page<CartResponseDto> getCartItems(String userEmail, int page, int size) {
+        Users user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
+
+        Page<Cart> cartPage = cartRepository.findAllByUsers_Uuid(user.getUuid(), PageRequest.of(page, size));
+
+        return cartPage.map(cart -> {
+            CartResponseDto dto = new CartResponseDto();
+            dto.setProductId(cart.getProducts().getUuid());
+            dto.setName(cart.getProducts().getName());
+            dto.setPrice(cart.getProducts().getPrice());
+            return dto;
+        });
     }
 }

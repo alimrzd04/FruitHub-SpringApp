@@ -5,7 +5,7 @@ import java.util.List;
 import org.example.dto.ProductDto;
 import org.example.model.Products;
 import java.util.stream.Collectors;
-import org.example.dto.ProductMapper;
+import org.example.utility.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.service.ProductsService;
 import org.springframework.http.ResponseEntity;
