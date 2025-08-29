@@ -77,6 +77,7 @@ public class CartService {
             dto.setProductId(cart.getProducts().getUuid());
             dto.setName(cart.getProducts().getName());
             dto.setPrice(cart.getProducts().getPrice());
+//            dto.setQuantity(cart.getProducts().getQuantities());
             return dto;
         });
     }

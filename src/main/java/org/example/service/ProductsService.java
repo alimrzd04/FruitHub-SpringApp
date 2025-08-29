@@ -1,10 +1,13 @@
 package org.example.service;
 
 import java.util.List;
+
+import org.example.dto.ProductResponseDto;
 import org.example.model.*;
 import org.example.repository.*;
 import org.example.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +23,23 @@ public class ProductsService {
     private final CurrenciesRepository currenciesRepository;
     private final CategoriesRepository categoriesRepository;
 
-    public List<Products> findAllProducts (String search, String sort, int page, int offset){
-        Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Pageable pageable = PageRequest.of(page,offset, Sort.by(direction, "name"));
+    public Page<ProductResponseDto> getAllProducts(int page, int size, String search) {
+        Pageable pageable = PageRequest.of(page, size);
 
-        if(search != null && !search.isEmpty()){
-            return productRepository.findByName(search,pageable).getContent();
+        Page<Products> productPage;
+        if (search != null && !search.isEmpty()) {
+            productPage = productRepository.findByNameContainingIgnoreCase(search, pageable);
+        } else {
+            productPage = productRepository.findAll(pageable);
         }
-        return productRepository.findAll(pageable).getContent();
+
+        return productPage.map(product -> {
+            ProductResponseDto dto = new ProductResponseDto();
+            dto.setName(product.getName());
+            dto.setPrice(product.getPrice());
+            dto.setStockQuantity(product.getStock_quantity());
+            return dto;
+        });
     }
 
     public Products createProduct(ProductDto dto) {

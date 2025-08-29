@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Products, UUID> {
 
-    Page<Products> findByNameContainingIgnoreCase(String name, Pageable pageable);
-    Page <Products> findByName(String name, Pageable pageable);
+    Page<Products> findAll(Pageable pageable);
+    Page<Products> findByNameContainingIgnoreCase(String search, Pageable pageable);
 
 }
