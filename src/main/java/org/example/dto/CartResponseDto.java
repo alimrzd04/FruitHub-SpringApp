@@ -12,5 +12,5 @@ public class CartResponseDto {
     private UUID productId;
     private String name;
     private Double price;
-//    private int quantity;
+    private int count;
 }

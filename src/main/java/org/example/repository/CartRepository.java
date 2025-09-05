@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, UUID> {
-
     @Query("SELECT c FROM Cart c WHERE c.users.uuid = :userId AND c.products.uuid = :productId")
     Optional<Cart> findByUserAndProduct(UUID userId, UUID productId);
 
@@ -21,6 +20,4 @@ public interface CartRepository extends JpaRepository<Cart, UUID> {
     Integer getTotalProductCount(@Param("userId") UUID userId);
 
     Page<Cart> findAllByUsers_Uuid(UUID userId, Pageable pageable);
-
-
 }

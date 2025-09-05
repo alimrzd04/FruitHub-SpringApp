@@ -13,7 +13,6 @@ import org.example.repository.StatusRepository;
 import org.example.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -77,8 +76,44 @@ public class CartService {
             dto.setProductId(cart.getProducts().getUuid());
             dto.setName(cart.getProducts().getName());
             dto.setPrice(cart.getProducts().getPrice());
-//            dto.setQuantity(cart.getProducts().getQuantities());
+            dto.setCount(cart.getCount());
             return dto;
         });
+    }
+
+    public String increaseProduct(String userEmail, UUID productId){
+        Users user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
+        Cart cart = cartRepository.findByUserAndProduct(user.getUuid(), productId)
+                .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+
+        cart.setCount(cart.getCount() + 1);
+        cartRepository.save(cart);
+        return "Product quantity increased in cart";
+    }
+
+    public String decreaseProduct(String userEmail, UUID productId){
+        Users user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
+        Cart cart = cartRepository.findByUserAndProduct(user.getUuid(), productId)
+                .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+
+        if (cart.getCount() > 1) {
+            cart.setCount(cart.getCount() - 1);
+            cartRepository.save(cart);
+            return "Product quantity decreased in cart";
+        } else {
+            cartRepository.delete(cart);
+            return "Product removed from cart";
+        }
+    }
+
+    public String deleteProductFromCart(String userEmail, UUID productId) {
+        Users user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
+        Cart cart = cartRepository.findByUserAndProduct(user.getUuid(), productId)
+                .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+        cartRepository.delete(cart);
+        return "Product removed from cart";
     }
 }
