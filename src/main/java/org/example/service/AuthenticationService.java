@@ -79,10 +79,15 @@ public class AuthenticationService {
             Users users = userRepository.findByEmail(loginDto.getEmail_address())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            String token = jwtService.generateToken(users);
+            String accessToken = jwtService.generateAccessToken(users);
+            String refreshToken = jwtService.generateRefreshToken(users);
+
+            users.setRefreshToken(refreshToken);
+            userRepository.save(users);
 
             return TokenDto.builder()
-                    .token(token)
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
                     .build();
 
         } catch (Exception e) {

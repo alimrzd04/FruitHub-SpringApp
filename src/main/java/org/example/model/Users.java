@@ -36,6 +36,9 @@ public class Users implements UserDetails {
     @JoinColumn(name = "status_id", nullable = false )
     private Status status;
 
+    @Column(length = 500)
+    private String refreshToken;
+
     @Column(name = "created_at",updatable = false)
     @UpdateTimestamp
     private LocalDateTime created_at;
@@ -43,6 +46,7 @@ public class Users implements UserDetails {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updated_at;
+
 
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)

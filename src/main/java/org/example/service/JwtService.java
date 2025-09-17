@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(key);
     }
 
-    public String generateToken(UserDetails user) {
+    public String generateAccessToken(UserDetails user) {
         return Jwts.builder()
                 .setClaims(new HashMap<>())
                 .setSubject(user.getUsername())
@@ -47,6 +48,27 @@ public class JwtService {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    public String generateRefreshToken(UserDetails user) {
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24 * 7))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+
+    }
+
+    public String gererateReSetToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 dəq
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
 
     public boolean tokenControl(String jwt, UserDetails userDetails) {
         final String userName = findUsername(jwt);

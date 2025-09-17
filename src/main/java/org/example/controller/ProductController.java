@@ -1,12 +1,9 @@
 package org.example.controller;
 
 
-import java.util.List;
 import org.example.dto.ProductDto;
 import org.example.dto.ProductResponseDto;
 import org.example.model.Products;
-import java.util.stream.Collectors;
-//import org.example.utility.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.service.ProductsService;
 import org.springframework.data.domain.Page;

@@ -43,7 +43,7 @@ public class UserController {
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
-                    TokenDto.builder().token("Login failed: " + e.getMessage()).build()
+                    TokenDto.builder().accessToken("Login failed: " + e.getMessage()).build()
             );
         }
     }
